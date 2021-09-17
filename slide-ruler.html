@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            height: 20vh;
+            background: black;
+            color: white;
+        }
+
+        .header-section {
+            margin: 100px auto 0;
+        }
+
+        svg {
+            max-width: 600px;
+            overflow: visible;
+        }
+
+        #svgPointer {
+            margin-top: 20vh;
+            width: 20px;
+            height: 12px;
+        }
+
+        .ball {
+            fill: white;
+            visibility: hidden;
+        }
+
+        .line {
+            fill: none;
+            stroke: white;
+            stroke-width: 2px;
+        }
+
+        .noTest {
+            fill: white;
+            font-size: 25px;
+        }
+
+        .pointer {
+            fill: #dd0000;
+        }
+
+        .noTextLg {
+            fill: white;
+            font-size: 35px;
+        }
+
+        .circleBack {
+            fill: #f3e5084d;
+        }
+    </style>
+</head>
+<body>
+    <div id="vueApp">
+        <div class="container mx-auto">
+            <svg id="svgPointer" style="width:20px;height:12px;">
+                <polygon fill="#dd0000" points="2,0 18,0 10,12"></polygon>
+                <circle class="circleBack" cx="12" cy="47" r="25" stroke="black" stroke-width="3" />
+                <text class='noTextLg' x="0" y="60">0</text>
+            </svg>
+            <svg id="svg" v-html="paths" viewBox="0 0 1200 600 ">
+                <!--<path class="line01 line" d="M 10 200  600 200"></path>-->
+            </svg>
+        </div>
+    </div>
+</body>
+</html>
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+<script type="text/javascript">
+    var vueApp = new Vue({
+        el: "#vueApp",
+        data: {
+            lineCount: 50,
+            halfLineCount: 0,
+            paths: "",
+            PointerHTML: "",
+            clientWidth: 0,
+        },
+        created() {
+            var _self = this;
+            _self.loadView();
+            _self.clientWidth = _self.getClientWidth();
+        },
+        methods: {
+            //刻度尺
+            loadView: function () {
+                var _self = this;
+                //設定指針位置
+                _self.setPointerPosition();
+                for (var i = 0; i < _self.lineCount; i++) {
+                    //長線
+                    _self.paths += ("<path class='line0" + i + " line' d='M " + i + "00 110 " + i + "00  300'></path>");
+                    //數字
+                    _self.paths += ("<text class='noTest' x='" + i + "00' y='100'>" + (i * 5) + "</text>");
+                    //短線
+                    _self.littlePath(i);
+                }
+
+            },
+            //短刻度
+            littlePath: function (count) {
+                var _self = this;
+                for (var i = 1; i < 5; i++) {
+                    _self.paths += ("<path class='line0" + count + "S" + i + " line' d='M " + count + (2 * i) + "0 210 " + count + (2 * i) + "0  300'></path>");
+                }
+            },
+            //設定指針位置
+            setPointerPosition: function () {
+                var _self = this;
+                _self.halfLineCount = parseInt(_self.lineCount / 2);
+                console.log(_self.halfLineCount);
+            },
+            getClientWidth: function () {
+                console.log(document.body.clientWidth);
+                return document.body.clientWidth;
+            }
+        }
+    });
+</script>
